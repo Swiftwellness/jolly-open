@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/swiftwellness/jolly-open/data-standard/menstrual-pain-log.schema.json",
+  "title": "Open Menstrual Pain Log Entry",
+  "description": "A single privacy-first record of menstrual cycle status, pain, interventions and daily impact. Version 0.1.",
+  "type": "object",
+  "required": ["schema_version", "entry_id", "user_ref", "local_date", "period_status", "pain"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "entry_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique ID for this entry."
+    },
+    "user_ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{8,64}$",
+      "description": "Pseudonymous user identifier. Must not contain names, phone numbers or other direct identifiers."
+    },
+    "age_band": {
+      "type": "string",
+      "enum": ["10-12", "13-15", "16-17", "18-24", "25-34", "35-44", "45+"],
+      "description": "Age band instead of exact age or date of birth."
+    },
+    "region": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}(-[A-Z0-9]{1,3})?$",
+      "description": "ISO 3166-2 code at country or first sub-national level only (e.g. KE, KE-17)."
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the entry was recorded (may differ from local_date if logged later)."
+    },
+    "local_date": {
+      "type": "string",
+      "format": "date",
+      "description": "The day this entry describes."
+    },
+    "cycle_day": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 90,
+      "description": "Day of cycle, where day 1 is the first day of bleeding."
+    },
+    "period_status": {
+      "type": "string",
+      "enum": ["bleeding", "spotting", "not_bleeding", "unsure"]
+    },
+    "flow": {
+      "type": "string",
+      "enum": ["light", "medium", "heavy", "very_heavy"],
+      "description": "Only relevant when bleeding."
+    },
+    "pain": {
+      "type": "object",
+      "required": ["score"],
+      "additionalProperties": false,
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Worst pain today on a 0-10 Numeric Rating Scale."
+        },
+        "locations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["lower_abdomen", "lower_back", "thighs", "pelvis", "head", "breasts", "other"]
+          }
+        },
+        "character": {
+          "type": "string",
+          "enum": ["cramping", "aching", "sharp", "stabbing", "burning", "other"]
+        },
+        "duration_hours": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "during_intercourse": {
+          "type": ["boolean", "null"],
+          "description": "Optional; apps for under-18 users should not ask this."
+        }
+      }
+    },
+    "symptoms": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "nausea", "vomiting", "diarrhoea", "painful_bowel_movements", "painful_urination",
+          "fatigue", "dizziness", "fainting", "headache", "bloating", "mood_changes"
+        ]
+      }
+    },
+    "interventions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["tens_device", "painkiller", "heat", "rest", "exercise", "herbal", "other"]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1440
+          },
+          "tens": {
+            "type": "object",
+            "description": "Device settings when type is tens_device.",
+            "additionalProperties": false,
+            "properties": {
+              "device_model": { "type": "string", "maxLength": 64 },
+              "intensity_level": { "type": "integer", "minimum": 1, "maximum": 20 },
+              "mode": { "type": "string", "enum": ["continuous", "burst", "modulated"] }
+            }
+          },
+          "painkiller_doses": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 20,
+            "description": "Number of doses taken today, when type is painkiller."
+          },
+          "pain_score_after": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "description": "Pain score after the intervention."
+          },
+          "minutes_until_reassessed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1440
+          }
+        }
+      }
+    },
+    "impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "missed_school": { "type": "boolean" },
+        "missed_work": { "type": "boolean" },
+        "left_early": { "type": "boolean" },
+        "activity_limitation": {
+          "type": "string",
+          "enum": ["none", "mild", "moderate", "severe"]
+        }
+      }
+    },
+    "care_sought": {
+      "type": "string",
+      "enum": ["none", "pharmacy", "school_nurse", "clinic", "hospital", "community_health_worker"]
+    },
+    "source": {
+      "type": "string",
+      "enum": ["user_app", "device_sync", "health_worker", "school_programme", "hmis"]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1",
+  "entry_id": "3f2b8c1e-7a4d-4e9b-9c2a-1d5e6f7a8b90",
+  "user_ref": "usr_8f3k2m9q",
+  "age_band": "13-15",
+  "region": "KE-17",
+  "recorded_at": "2026-11-03T18:20:00+03:00",
+  "local_date": "2026-11-03",
+  "cycle_day": 1,
+  "period_status": "bleeding",
+  "flow": "heavy",
+  "pain": {
+    "score": 8,
+    "locations": ["lower_abdomen", "lower_back"],
+    "character": "cramping",
+    "duration_hours": 6
+  },
+  "symptoms": ["nausea", "fatigue"],
+  "interventions": [
+    {
+      "type": "tens_device",
+      "started_at": "2026-11-03T10:15:00+03:00",
+      "duration_minutes": 30,
+      "tens": {
+        "device_model": "Jolly v2",
+        "intensity_level": 6,
+        "mode": "continuous"
+      },
+      "pain_score_after": 3,
+      "minutes_until_reassessed": 20
+    }
+  ],
+  "impact": {
+    "missed_school": false,
+    "left_early": false,
+    "activity_limitation": "mild"
+  },
+  "care_sought": "none",
+  "source": "user_app"
+}
